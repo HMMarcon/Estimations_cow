@@ -14,8 +14,8 @@ def init_tables():
                            "Proteinado 0,1%", "Proteico energetico 0,3%",
                            "Proteico energetico 0,5%", "Ração 1,5%", "Dieta total 2,2%"
                            ],
-                "Preco (R$/kg)": [1, 1, 1, 1, 1, 1, 1],
-                "Consumo (/dia)":[0.03, 0.03, 0.001, 0.003, 0.005, 1.50/100, 2.20/100],
+                "Preco (R$/kg)": [1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00],
+                "Consumo (%peso do boi/dia)":[0.03, 0.03, 0.001, 0.003, 0.005, 1.50/100, 2.20/100],
                 "Engorda na agua (kg/dia)": [0.4, 0.5, 0.65, 0.8, 0.9, 1.2, 1.5],
                 "Engorda na seca (kg/dia)": [0, 0.1, 0.15, 0.3, 0.4, 0.9, 1.5],
             }
@@ -217,13 +217,15 @@ if page.startswith(title_1):
                 st.metric(
                     "Lucro total por cabeça",
                     lucro/n_cabecas,
-                    delta=round((lucro - custo_total)/n_cabecas, 2),
+                    delta=round(lucro/n_cabecas, 2),
                     #help="Peso inicial + ∑(engorda_na_fase × meses)",
                 )
 
             st.markdown("### Detalhamento por alimento")
             results_df = pd.DataFrame(results_rows)
             st.dataframe(results_df, use_container_width=True)
+
+            # Add sector plot here
 
 
 # ---------- PAGE 2: TABLES (EDITABLE) ----------
@@ -250,7 +252,7 @@ elif page.startswith(title_2):
         st.session_state["custo_boi"] = custo_boi
 
         custo_terra = st.number_input(
-            "Custo da terra (R$/mês)",
+            "Custo da terra (R$/mês/cabeça)",
             min_value=0.0,
             value=float(st.session_state.get("custo_terra", 0.0)),
             step=1.0,
