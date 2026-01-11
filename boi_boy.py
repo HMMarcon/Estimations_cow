@@ -153,7 +153,7 @@ if page.startswith(title_1):
 
                     
                     preco = float(row["Preco (R$/kg)"])
-                    n_comida_percentage = 30*row["Consumo (/dia)"] # * peso do boi atual (consumo = porcentagem do peso)
+                    n_comida_percentage = 30*row["Consumo (%peso do boi/dia)"] # * peso do boi atual (consumo = porcentagem do peso)
                     if phase == "seca":
                         engorda = float(row["Engorda na seca (kg/dia)"])
                     else:
