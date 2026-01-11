@@ -148,17 +148,22 @@ if page.startswith(title_1):
                 months = e["Months"]
 
                 row, source = get_food_row(food)
-
+                peso = peso_inicial
                 if row is not None:
+
+                    
                     preco = float(row["Preco (R$/kg)"])
-                    n_comida = 30*row["Consumo (/dia)"]
+                    n_comida_percentage = 30*row["Consumo (/dia)"] # * peso do boi atual (consumo = porcentagem do peso)
                     if phase == "seca":
                         engorda = float(row["Engorda na seca (kg/dia)"])
                     else:
                         engorda = float(row["Engorda na agua (kg/dia)"])
-
-                    food_cost = n_comida * preco * months
                     delta_peso = months * engorda * 30
+                    peso += delta_peso/2 # engorda metade do periodo (média)
+                    n_comida = n_comida_percentage * peso
+                    food_cost = n_comida * preco * months
+                    peso += delta_peso/2 # peso final
+                    
 
                     total_food_cost += food_cost
                     total_delta_peso += delta_peso
@@ -183,7 +188,7 @@ if page.startswith(title_1):
 
             # métricas agregadas
             total_meses = total_seca + total_agua
-            custo_terra_total = total_meses * custo_terra
+            custo_terra_total = total_meses * custo_terra * n_cabecas
             custo_total = custo_terra_total + (total_food_cost + custo_boi) * n_cabecas
             peso_final = peso_inicial + total_delta_peso
             preco_venda = n_cabecas * peso_final * preco_kg_venda
